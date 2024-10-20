@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <script>
+      let interval;
+
+      async function fetchWeather(city) {
+        try {
+<<<<<<< HEAD
+          const response = await fetch('/current-weather', {
+=======
+          const response = await fetch('/weather', {
+>>>>>>> 6b0e34fe17c1c762f8e27d34b69521dc778bfcfa
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ city: city })
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            displayWeather(data);
+          } else {
+            console.error('Error fetching weather data');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      }
+
+      function startPolling(event) {
+        event.preventDefault();
+
+        const form = document.getElementById("myForm");
+        const formData = new FormData(form);
+        const city = formData.get('city');
+        console.log(city);
+        
+        fetchWeather(city);
+
+        if (interval) {
+          clearInterval(interval);
+        }
+        interval = setInterval(() => fetchWeather(city), 50000);
+    }
+
+      function displayWeather(data) {
+        const weatherResult = document.getElementById('weather-result');
+
+        if (data.error) {
+          weatherResult.innerHTML = `<p style="color: red;">${data.error}</p>`;
+        } else {
+          weatherResult.innerHTML = `
+          <h2>Weather in ${data.city}</h2>
+          <p>main: ${data.main}</p>
+            <p>Temperature: ${data.temperature}°C</p>
+            <p>Description: ${data.description}</p>
+            <p>Feels Like: ${data.feels_like}</p>
+            <p>Date: ${data.date} (Unix)</p>
+            <img src="http://openweathermap.org/img/w/${data.icon}.png" alt="Weather icon">
+          `;
+        }
+      }
+    </script>
+</head>
+<body>
+    <h1>Weather App</h1>
+    <form id="myForm" onsubmit="startPolling(event)">
+        <label><input type="radio" name="city" value="Delhi" required> Delhi</label><br>
+        <label><input type="radio" name="city" value="Mumbai"> Mumbai</label><br>
+        <label><input type="radio" name="city" value="Bengaluru"> Bengaluru</label><br>
+        <button type="submit">Get Weather</button>
+    </form>
+    <div id="weather-result"></div>
+</body>
+</html>
